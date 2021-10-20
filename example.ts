@@ -32,14 +32,5 @@ export async function runPrompt(): Promise<string> {
 const res = await runPrompt();
 
 await snap([
-    {content: res, imageSavePath: 'docs/kopo.png', viewport: {width: 700, height: 170}},
-    {content: res+res+`alm
-    alma
-    lmalma
-    lma
-    lm
-    asd
-    asf
-    dg
-    dfg`, imageSavePath: 'docs/kopo2.png'}
-])
+    {content: `\x1b[42m \x1b[1m\x1b[37mSnapper\x1b[39m\x1b[22m 📷  \x1b[49m`, imageSavePath: 'snapper.png', viewport: {width: 145, height: 35}},
+]);
