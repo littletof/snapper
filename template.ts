@@ -21,8 +21,7 @@ export const template = `
         term.open(document.getElementById('terminal'));
         fitAddon.fit();
         const text = '##REPLACEME##';
-        console.log('GOT TEXT:\n', text);
-        term.write(text.replace(/\n/g, '\r\n'));
+        term.write(text.replace(/\\n/g, '\\r\\n'));
 
         setTimeout(() =>{
             const outHeight = document.getElementsByClassName('xterm-scroll-area')[0].scrollHeight;
@@ -34,7 +33,7 @@ export const template = `
             const done = document.createElement('div');
             done.setAttribute('id', 'done');
             document.getElementById('terminal').appendChild(done);
-        }, 1000); // TODO wait for actual print
+        }, 500); // TODO wait for actual print
       </script>
     </body>
   </html>`;
