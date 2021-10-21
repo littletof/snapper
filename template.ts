@@ -18,6 +18,8 @@ export const template = `
         var fitAddon = new this.fitAddon();
         term.loadAddon(fitAddon);
 
+        term.setOption('theme', '##THEME##');
+
         term.open(document.getElementById('terminal'));
         fitAddon.fit();
         const text = '##REPLACEME##';
