@@ -33,4 +33,4 @@ const res = await runPrompt();
 
 await snap([
     {content: `\x1b[42m \x1b[1m\x1b[37mSnapper\x1b[39m\x1b[22m 📷  \x1b[49m`, imageSavePath: 'snapper.png', viewport: {width: 145, height: 35}},
-], {/* puppeteerLaunchOptions: {headless: false}, */ theme: {background: "#ccc"}});
+], /*{ puppeteerLaunchOptions: {headless: false},  theme: {background: "#ccc"}}*/);
