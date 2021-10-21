@@ -1,4 +1,5 @@
 import { Application, Router, send } from "https://deno.land/x/oak@v9.0.1/mod.ts";
+import {template} from './template.ts';
 
 export function buildServer(): Application {
     const router = new Router();
@@ -11,7 +12,7 @@ export function buildServer(): Application {
         const formData = await body.value;
         const termtext = decodeURI(formData['text'])/*  : context.request.url.searchParams.get('text') */;
         // console.log('POST', decodeURI(termtext));
-        const template = Deno.readTextFileSync('./terminal_template.html');
+        // const template = Deno.readTextFileSync('./terminal_template.html');
 
         // const template = Deno.readTextFileSync('./terminal.html');
 
