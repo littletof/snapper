@@ -10,7 +10,7 @@ export interface SnapParams {
 // TODO Deno puppeteer types
 export type PuppeteerLaunchOptions = any;
 
-export async function snap(snaps: SnapParams[], options?: {snapServerUrl?: string, puppeteerLaunchOptions?: PuppeteerLaunchOptions}) {
+export async function snap(snaps: SnapParams[], options?: {snapServerUrl?: string, theme?: any, puppeteerLaunchOptions?: PuppeteerLaunchOptions}) {
     const {listen, abort} = startServer();
 
     const browser = await puppeteer.launch(options?.puppeteerLaunchOptions || {
@@ -23,14 +23,24 @@ export async function snap(snaps: SnapParams[], options?: {snapServerUrl?: strin
     const page = await browser.newPage();
     
     for(let textCase of snaps) {
-        page.setViewport({deviceScaleFactor: 3, width: 1080, height: 30, ...textCase.viewport});
+        const viewPort = {deviceScaleFactor: 3, width: 1080, height: 30, ...textCase.viewport};
+        // TODO handle headless looking different
+        // if(typeof options?.puppeteerLaunchOptions?.headless === "boolean" && !options.puppeteerLaunchOptions.headless) {
+        //     viewPort.width += 15;
+        // }
+        page.setViewport(viewPort);
+
+        let postData: any = {text: encodeURI(textCase.content)};
+        if(options?.theme) {
+            postData.theme = JSON.stringify(options.theme);
+        }
 
         await page.setRequestInterception(true);
 
         page.once("request", async interceptedRequest => {
             await interceptedRequest.continue({
                 method: "POST",
-                postData: `{"text": "${encodeURI(textCase.content)}"}`,
+                postData: JSON.stringify(postData),
                 headers: {
                 ...interceptedRequest.headers(),
                 "Content-Type": "application/json"
