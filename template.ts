@@ -19,10 +19,12 @@ export const template = `
         term.loadAddon(fitAddon);
 
         term.setOption('theme', '##THEME##');
+        // ##FONTFAMILY##
+        // ##FONTSIZE##
 
         term.open(document.getElementById('terminal'));
         fitAddon.fit();
-        const text = '##REPLACEME##';
+        const text = '##TERMINAL_CONTENT##';
         term.write(text.replace(/\\n/g, '\\r\\n'));
 
         setTimeout(() =>{
