@@ -5,7 +5,8 @@ import { template } from './template.ts';
 export interface SnapParams {
     imageSavePath: string;
     content: string;
-    viewport?: {width: number, height: number, deviceScaleFactor?: number}, // TODO get scaleFactor out, make w/h optional
+    viewport?: {width?: number, height?: number, deviceScaleFactor?: number}, // TODO get scaleFactor out
+    padding?: string;
 }
 
 export interface SnapOptions {
@@ -15,6 +16,7 @@ export interface SnapOptions {
     theme?: ThemeColors;
     fontFamily?: 'default' | string;
     fontSize?: number;
+    padding?: string;
 }
 
 interface RenderOptions {
@@ -22,6 +24,7 @@ interface RenderOptions {
     theme?: ThemeColors;
     fontFamily?: string;
     fontSize?: number;
+    padding?: string;
 }
 
 interface POSTRenderOptions {
@@ -29,6 +32,7 @@ interface POSTRenderOptions {
     theme?: string;
     fontFamily?: string;
     fontSize?: number;
+    padding?: string;
 }
 
 /** XTermJs ITheme */
@@ -125,7 +129,7 @@ export async function snap(snaps: SnapParams[], options?: SnapOptions) {
         await page.waitForSelector('#done');
         // TODO checkexists imageSavePath
         log(`\t- ${textCase.imageSavePath}`);
-        await page.screenshot({ path: textCase.imageSavePath, fullPage: !textCase.viewport });
+        await page.screenshot({ path: textCase.imageSavePath, fullPage: true});
     }
 
     await browser.close();
@@ -139,12 +143,14 @@ export function getHTML(options: RenderOptions) {
     const content = options.text.replace(/([`'"$])/g, '\\$1'); // escape spec chars
     const theme = {...defaultTheme, ...options.theme };
     const fontFamily = options.fontFamily || defaultFontFamily;
+    const padding = options.padding || '10px';
 
 
     return new String(template)
             .replace('\'##THEME##\'', `${JSON.stringify(theme)}`)
             .replace('// ##FONTFAMILY##', fontFamily !== 'default' ? `term.setOption(\'fontFamily\', \'${fontFamily}\');` : '')
             .replace('// ##FONTSIZE##', options.fontSize ? `term.setOption(\'fontSize\', \'${options.fontSize}\');` : '')
+            .replace('##PADDING##', padding)
             .replace('\'##TERMINAL_CONTENT##\'', `\`${content}\``) // keep last
 }
 
@@ -153,7 +159,8 @@ export function getPostDataFromOptions(options: SnapOptions, textCase: SnapParam
         text: encodeURI(textCase.content),
         theme: options.theme ? JSON.stringify(options.theme) : undefined,
         fontFamily: options.fontFamily,
-        fontSize: options.fontSize
+        fontSize: options.fontSize,
+        padding: textCase.padding || options.padding
     }
 }
 
@@ -162,7 +169,8 @@ export function getRenderOptionsFromPostData(post: POSTRenderOptions): RenderOpt
         text: decodeURI(post.text),
         theme: post.theme ? JSON.parse(decodeURI(post.theme)) : undefined,
         fontFamily: post.fontFamily,
-        fontSize: post.fontSize
+        fontSize: post.fontSize,
+        padding: post.padding
     };
 }
 

@@ -7,14 +7,14 @@ export const template = `
       <script src="./static/xterm/fitAddon.js"></script>
       <style>
         .terminal {
-          padding: 10px 10px 0; /* TODO allow to remove padding */
+          padding: ##PADDING##;
         }
       </style>
     </head>
     <body style="margin: 0;">
-      <div id="terminal" style="visibility: hidden;"></div>
+      <div id="snap-terminal" style="visibility: hidden;"></div>
       <script>
-        var term = new Terminal();
+        var term = new Terminal({rows: 1, cols: 1});
         var fitAddon = new this.fitAddon();
         term.loadAddon(fitAddon);
 
@@ -22,21 +22,23 @@ export const template = `
         // ##FONTFAMILY##
         // ##FONTSIZE##
 
-        term.open(document.getElementById('terminal'));
+        term.open(document.getElementById('snap-terminal'));
         fitAddon.fit();
         const text = '##TERMINAL_CONTENT##';
         term.write(text.replace(/\\n/g, '\\r\\n'));
 
         setTimeout(() =>{
-            const outHeight = document.getElementsByClassName('xterm-scroll-area')[0].scrollHeight;
+            const outHeight = document.getElementsByClassName('xterm-scroll-area')[0].offsetHeight;
             console.log(outHeight);
-            console.log(document.getElementById('terminal'));
-            document.getElementById('terminal').style.height = \`\${outHeight}px\`;
-            document.getElementById('terminal').style.visibility = \`unset\`;
+            console.log(document.getElementById('snap-terminal'));
+            document.getElementById('snap-terminal').style.height = \`\${outHeight}px\`;
+
+            document.getElementById('snap-terminal').style.visibility = \`unset\`;
             fitAddon.fit();
-            const done = document.createElement('div');
+            fitAddon.fit();
+            const done = document.createElement('span');
             done.setAttribute('id', 'done');
-            document.getElementById('terminal').appendChild(done);
+            document.getElementById('snap-terminal').appendChild(done);
         }, 500); // TODO wait for actual print
       </script>
     </body>
