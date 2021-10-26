@@ -84,7 +84,7 @@ When creating multiple images, provide your inputs to `snap` in bulk, otherwise,
 | 🌐 `--allow-net` | yes | Needed to be able to run the background server which puppeteer visits and captures |
 
 # Spread the word
-If you use `snapper` in your module or to generate images for your documentation/Readme consider adding a badge to your readme:
+If you use `snapper` in your module or to generate images for your documentation/Readme consider adding a badge to it:
 
 [![snapper_deno](https://img.shields.io/badge/-snapper%20%F0%9F%93%B7-%230DBC79)](https://github.com/littletof/snapper)
 [![snapper_deno](https://img.shields.io/badge/-snapper%20%F0%9F%93%B7-%230DBC79?style=flat-square)](https://github.com/littletof/snapper)
