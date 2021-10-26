@@ -2,6 +2,8 @@ import { Application, Router } from "https://deno.land/x/oak@v9.0.1/mod.ts";
 import {xterm} from './static/xterm/packed.ts';
 import { getHTML, getRenderOptionsFromPostData, testText } from "./snapper.ts";
 
+export const defaultPort = 7777;
+
 export function buildServer(): Application {
     const router = new Router();
     router
@@ -35,7 +37,7 @@ export function startServer(opts?: {port?: number}) {
     const { signal } = controller;
 
     return {
-        listen: buildServer().listen({port: opts?.port || 7777, signal}),
+        listen: buildServer().listen({port: opts?.port || defaultPort, signal}),
         abort: () => controller.abort()
     };
 }

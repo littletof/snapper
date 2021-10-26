@@ -1,5 +1,5 @@
 import { puppeteer } from "./deps.ts";
-import { startServer } from "./server.ts";
+import { defaultPort, startServer } from "./server.ts";
 import { template } from './template.ts';
 
 /** Parameters for a single image output */
@@ -33,6 +33,7 @@ export interface SnapParams {
 /** Options for the whole group of cases. */
 export interface SnapOptions extends Omit<SnapParams, 'content' | 'imageSavePath'>{
     snapServerUrl?: string;
+    snapServerPort?: number;
     /** Puppeteer options, which get passed straight to deno puppeteer */
     puppeteerLaunchOptions?: PuppeteerLaunchOptions;
     /** Whether or not to log progress in the terminal. */
@@ -108,7 +109,7 @@ export async function snap(snaps: SnapParams[], options?: SnapOptions) {
     const log = createLog(options);
     log('\x1b[42m \x1b[1m\x1b[37mSnapper\x1b[39m\x1b[22m 📷  \x1b[49m');
     log('\nStarting server...');
-    const {listen, abort} = startServer();
+    const {listen, abort} = startServer({port: options?.snapServerPort});
 
     log('Launching puppeteer...');
     const browser = await puppeteer.launch(options?.puppeteerLaunchOptions || {
@@ -145,7 +146,7 @@ export async function snap(snaps: SnapParams[], options?: SnapOptions) {
         });
 
         
-        await page.goto(options?.snapServerUrl || `http://localhost:7777`);
+        await page.goto(options?.snapServerUrl || `http://localhost:${options?.snapServerPort || defaultPort }`);
         await page.waitForSelector('#done');
         // TODO checkexists imageSavePath
         log(`\t- ${textCase.imageSavePath}`);
@@ -203,6 +204,7 @@ export function createLog(options?: SnapOptions) {
     }
     return (...text: any[]) => {}
 }
+
 export const defaultFontFamily = 'Consolas, "Courier New", monospace';
 export const defaultTheme: ThemeColors = {
     foreground: "#cccccc",
