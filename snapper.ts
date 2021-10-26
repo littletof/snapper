@@ -2,21 +2,41 @@ import { puppeteer } from "./deps.ts";
 import { startServer } from "./server.ts";
 import { template } from './template.ts';
 
+/** Parameters for a single image output */
 export interface SnapParams {
-    imageSavePath: string;
+    /** Output path for the generated image. `JPEG` and `PNG` formats are supported. */
+    imageSavePath: string ; // `${string}${'.png' | '.jpg' | '.jpeg'}`
+    /** ANSI text to generate image from */
     content: string;
-    viewport?: {width?: number, height?: number, deviceScaleFactor?: number}, // TODO get scaleFactor out
+    /** Size settings for the generated image */
+    viewport?: {
+        /** Defines how wide the terminal should be. If its smaller, than the output in on line, it will wrap its content into multiple lines. */
+        width?: number;
+        /** Defines the height of the terminal. If its set to be smaller than the output in the terminal, it will cut the output in the generated image. */
+        height?: number;
+        /** Defines the scale factor for the generated image. If set to `x`, the output image's resolution will be `x` times the original resolution.
+         * 
+         * Defaults to `3`. */
+        deviceScaleFactor?: number; // TODO get scaleFactor out
+    },
+    /** `CSS` style padding around the output. */
     padding?: string;
+
+    /** Color theme for terminal output. */
+    theme?: ThemeColors;
+    /** Font family of the output text in the terminal. */
+    fontFamily?: 'default' | string;
+    /** Font size of the output text in the terminal. */
+    fontSize?: number;
 }
 
-export interface SnapOptions {
+/** Options for the whole group of cases. */
+export interface SnapOptions extends Omit<SnapParams, 'content' | 'imageSavePath'>{
     snapServerUrl?: string;
+    /** Puppeteer options, which get passed straight to deno puppeteer */
     puppeteerLaunchOptions?: PuppeteerLaunchOptions;
+    /** Whether or not to log progress in the terminal. */
     verbose?: boolean;
-    theme?: ThemeColors;
-    fontFamily?: 'default' | string;
-    fontSize?: number;
-    padding?: string;
 }
 
 interface RenderOptions {
@@ -93,7 +113,7 @@ export async function snap(snaps: SnapParams[], options?: SnapOptions) {
     log('Launching puppeteer...');
     const browser = await puppeteer.launch(options?.puppeteerLaunchOptions || {
         env: { PUPPETEER_PRODUCT: 'chrome' },
-        defaultViewport: {width: 1080, height: 30},
+        defaultViewport: {width: 1080, height: 15},
         // headless: false,
         // dumpio: true,
     });
@@ -101,7 +121,7 @@ export async function snap(snaps: SnapParams[], options?: SnapOptions) {
     const page = await browser.newPage();
     log('\nSnapping pictures: ');
     for(let textCase of snaps) {
-        const viewPort = {deviceScaleFactor: 3, width: 1080, height: 30, ...textCase.viewport};
+        const viewPort = {deviceScaleFactor: 3, width: 1080, height: 15, ...options?.viewport, ...textCase.viewport};
         // TODO handle headless looking different
         // if(typeof options?.puppeteerLaunchOptions?.headless === "boolean" && !options.puppeteerLaunchOptions.headless) {
         //     viewPort.width += 15;
@@ -129,7 +149,8 @@ export async function snap(snaps: SnapParams[], options?: SnapOptions) {
         await page.waitForSelector('#done');
         // TODO checkexists imageSavePath
         log(`\t- ${textCase.imageSavePath}`);
-        await page.screenshot({ path: textCase.imageSavePath, fullPage: true});
+        const heightSet = !isNaN(options?.viewport?.height as number) || !isNaN(textCase.viewport?.height as number);
+        await page.screenshot({ path: textCase.imageSavePath, fullPage: !heightSet});
     }
 
     await browser.close();
@@ -148,18 +169,20 @@ export function getHTML(options: RenderOptions) {
 
     return new String(template)
             .replace('\'##THEME##\'', `${JSON.stringify(theme)}`)
-            .replace('// ##FONTFAMILY##', fontFamily !== 'default' ? `term.setOption(\'fontFamily\', \'${fontFamily}\');` : '')
+            .replace('// ##FONTFAMILY##', fontFamily !== 'default' ? `term.setOption('fontFamily', '${fontFamily}');` : '')
             .replace('// ##FONTSIZE##', options.fontSize ? `term.setOption(\'fontSize\', \'${options.fontSize}\');` : '')
             .replace('##PADDING##', padding)
             .replace('\'##TERMINAL_CONTENT##\'', `\`${content}\``) // keep last
 }
 
 export function getPostDataFromOptions(options: SnapOptions, textCase: SnapParams): POSTRenderOptions {
+    const text = encodeURI(textCase.content);
+    const theme = textCase.theme || options.theme;
     return {
-        text: encodeURI(textCase.content),
-        theme: options.theme ? JSON.stringify(options.theme) : undefined,
-        fontFamily: options.fontFamily,
-        fontSize: options.fontSize,
+        text,
+        theme: theme ? JSON.stringify(theme) : undefined,
+        fontFamily: textCase.fontFamily || options.fontFamily,
+        fontSize: textCase.fontSize || options.fontSize,
         padding: textCase.padding || options.padding
     }
 }
