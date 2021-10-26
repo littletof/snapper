@@ -1,4 +1,5 @@
 # Snapper 📷
+[![deno badge](https://img.shields.io/badge/deno.land/x-success?logo=deno&logoColor=black&labelColor=white&color=black)](https://deno.land/x/snapper)
 [![snapper_deno](https://img.shields.io/badge/-snapper%20%F0%9F%93%B7-%230DBC79?style=flat-square)](https://github.com/littletof/snapper)
 
 
@@ -50,7 +51,7 @@ await snap([
     /* 1 */{content: snapperText, imageSavePath: 'snapper.png'},
     /* 2 */{content: snapperText, imageSavePath: 'snapper_theme.png', theme: {background: '#acacac', green: '#297', brightWhite: '#ddd'}},
     /* 3 */{content: snapperText, imageSavePath: 'snapper_font.png', fontFamily: "fantasy", fontSize: 10},
-    /* 4 */{content: snapperText, imageSavePath: 'snapper_padding.png', padding: '5px 10px 0 5px', viewport: {width: 135}},
+    /* 4 */{content: snapperText, imageSavePath: 'snapper_padding.png', padding: '0px 0px 0px 0px', viewport: {width: 135}},
     /* 5 */{content: snapperText, imageSavePath: 'snapper_viewport.png', viewport: {width: 135, height: 35, deviceScaleFactor: 1}},
 ], { verbose: true, viewport: {width: 135}});
 ```

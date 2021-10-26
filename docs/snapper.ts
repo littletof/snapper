@@ -10,6 +10,6 @@ await snap([
     {content: snapperText, imageSavePath: 'docs/images/snapper.png'},
     {content: snapperText, imageSavePath: 'docs/images/snapper_theme.png', theme: {background: '#acacac', green: '#4E9A06', brightWhite: '#ddd'}},
     {content: snapperText, imageSavePath: 'docs/images/snapper_font.png', fontFamily: "fantasy", fontSize: 10},
-    {content: snapperText, imageSavePath: 'docs/images/snapper_padding.png', padding: '5px 10px 0 5px', viewport: {width: 135}},
+    {content: snapperText, imageSavePath: 'docs/images/snapper_padding.png', padding: '0px 0px 0px 0px', viewport: {width: 115}},
     {content: snapperText, imageSavePath: 'docs/images/snapper_viewport.png', viewport: {width: 135, height: 35, deviceScaleFactor: 1}},
 ], { verbose: true, viewport: {width: 135}});
