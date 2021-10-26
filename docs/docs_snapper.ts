@@ -1,7 +1,7 @@
 import { snap } from "../mod.ts";
 import { testText } from "../snapper.ts";
 
-// deno run --unstable -A docs\snapper.ts
+// deno run --unstable -A docs\docs_snapper.ts
 
 const snapperText = `\x1b[42m \x1b[1m\x1b[37mSnapper\x1b[39m\x1b[22m 📷  \x1b[49m`;
 
