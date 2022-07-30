@@ -12,7 +12,7 @@ Generate this image:
 
 With this:
 ```ts
-import { snap } from "https://deno.land/x/snapper@v0.0.5/mod.ts";
+import { snap } from "https://deno.land/x/snapper@v0.0.6/mod.ts";
 
 const testText = `[1mbold            [22m[2mdim             [22m[3mitalic          [23m[4munderline       [24m[7minverse         [27m[9mstrikethrough   [29m 
 [1m[30mblack           [39m[22m[1m[31mred             [39m[22m[1m[32mgreen           [39m[22m[1m[33myellow          [39m[22m[1m[34mblue            [39m[22m[1m[35mmagenta         [39m[22m[1m[36mcyan            [39m[22m[1m[37mwhite         [39m[22m
@@ -43,7 +43,7 @@ $env:PUPPETEER_PRODUCT='chrome'; deno run -A --unstable https://deno.land/x/pupp
 After puppeteer was set up, simply run the following:
 
 ```ts
-import { snap } from "https://deno.land/x/snapper@v0.0.5/mod.ts";
+import { snap } from "https://deno.land/x/snapper@v0.0.6/mod.ts";
 
 const snapperText = `\x1b[42m \x1b[1m\x1b[37mSnapper\x1b[39m\x1b[22m 📷  \x1b[49m`;
 
@@ -68,7 +68,7 @@ The generated images will be placed placed into `cwd`+`imageSavePath`:
 When creating multiple images, provide your inputs to `snap` in bulk, otherwise, calling the function one-by-one will take a lot of time to finish.
 
 ## Options
- See the [docs](https://doc.deno.land/https/deno.land/x/snapper@v0.0.5/mod.ts) and the example code above for the different options.
+ See the [docs](https://doc.deno.land/https/deno.land/x/snapper@v0.0.6/mod.ts) and the example code above for the different options.
 
 > `height` cuts the image, while a small `width` will result in the content wrapping
 
