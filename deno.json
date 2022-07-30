@@ -1,0 +1,7 @@
+{
+    "tasks": {
+        "example": "deno run -A --unstable ./example.ts",
+        "docs:gen": "deno run -A --unstable ./docs/docs_snapper.ts",
+        "pack:xterm": "deno run --allow-read=static/xterm/ --allow-write=static/xterm/packed.ts static/pack.ts"
+    }
+}
